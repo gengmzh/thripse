@@ -47,6 +47,7 @@ public class ThriftBuildComposite extends Composite {
 		this.generator = new Combo(this, SWT.READ_ONLY);
 		GridData grid = new GridData(GridData.BEGINNING);
 		grid.horizontalSpan = 2;
+		grid.widthHint = 200;
 		generator.setLayoutData(grid);
 
 		this.outpath = new DirectoryEditor(this);
