@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Thrift Plug-in
+Bundle-SymbolicName: thripse; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: org.thripse.Activator
+Bundle-Vendor: gengmzh@gmail.com
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.examples.javaeditor;bundle-version="3.1.300"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
