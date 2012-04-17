@@ -40,7 +40,7 @@ public class ThriftBuildComposite extends Composite {
 		this.setLayout(layout);
 
 		this.thriftCompiler = new FileEditor(this);
-
+		// generator
 		Label label = new Label(this, SWT.NONE);
 		label.setLayoutData(new GridData(GridData.BEGINNING));
 		label.setText("Thrift generator: ");
