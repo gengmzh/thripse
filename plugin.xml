@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.thripse.preferences.ThripsePreferencePage"
+            id="org.thripse.preferences.ThripsePreferencePage"
+            name="Thrift">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.thripse.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.thripse.editors.MultiPageEditor"
+            contributorClass="org.thripse.editors.MultiPageEditorContributor"
+            extensions="thrift"
+            icon="icons/thrift_editor.gif"
+            id="org.thripse.editors.MultiPageEditor"
+            name="Thrift Editor">
+      </editor>
+   </extension>
+   
+
+</plugin>
