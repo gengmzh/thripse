@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.thripse.console.ConsoleLogger;
+
 /**
  * @since 2012-4-17
  * @author gmz
@@ -33,7 +35,7 @@ public class ThriftCompiler {
 			line = reader.readLine();
 			proc.waitFor();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ConsoleLogger.log(e);
 		}
 		String[] version = (line != null ? line.split(" ") : new String[0]);
 		return version.length == 3 ? version[2] : "";
@@ -75,28 +77,28 @@ public class ThriftCompiler {
 			}
 			proc.waitFor();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ConsoleLogger.log(e);
 		}
 		return generators;
 	}
 
 	public int compile(String thriftFile) {
 		// command
-		System.out.print("compile:");
+		ConsoleLogger.print("compile:");
 		int index = parameters.size() * 2 + 2;
 		String[] cmd = new String[index];
 		index = 0;
 		cmd[index++] = compiler;
-		System.out.print(" " + compiler);
+		ConsoleLogger.print(" " + compiler);
 		for (String key : parameters.keySet()) {
 			cmd[index++] = key;
-			System.out.print(" " + key);
+			ConsoleLogger.print(" " + key);
 			String value = parameters.get(key);
 			cmd[index++] = value;
-			System.out.print(" " + value);
+			ConsoleLogger.print(" " + value);
 		}
 		cmd[index] = thriftFile;
-		System.out.println(" " + thriftFile);
+		ConsoleLogger.println(" " + thriftFile);
 		// compile
 		int result = 1;
 		try {
@@ -106,11 +108,11 @@ public class ThriftCompiler {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			String line = null;
 			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
+				ConsoleLogger.println(line);
 			}
 			result = proc.waitFor();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ConsoleLogger.log(e);
 		}
 		return result;
 	}

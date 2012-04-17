@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.thripse.console.ConsoleLogger;
 
 /**
  * @since 2012-4-17
@@ -58,12 +59,12 @@ public class ThriftBuildComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				ThriftCompiler compiler = new ThriftCompiler(thriftCompiler.getValue());
 				if (generator.getSelectionIndex() < 0) {
-					System.out.println("please select generator");
+					ConsoleLogger.println("please select generator");
 					return;
 				}
 				String str = generator.getItem(generator.getSelectionIndex());
 				int res = compiler.setSTR(str.split(" ")[0]).setOut(outpath.getValue()).compile(thriftFile);
-				System.out.println("building: " + (res != 0 ? "failed" : "done successfully"));
+				ConsoleLogger.println("building: " + (res != 0 ? "failed" : "done successfully"));
 			}
 		});
 	}
