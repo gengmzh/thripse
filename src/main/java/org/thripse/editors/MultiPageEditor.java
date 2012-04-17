@@ -1,6 +1,7 @@
 package org.thripse.editors;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -8,16 +9,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -74,77 +66,22 @@ public class MultiPageEditor extends MultiPageEditorPart implements IResourceCha
 		}
 	}
 
-	private Label thriftCompiler;
-
 	/**
 	 * Creates page 1 of the multi-page editor, which allows you to change the
 	 * font used in page 2.
 	 */
 	void createPage1() {
-		final Composite composite = new Composite(getContainer(), SWT.NONE);
-		GridLayout layout = new GridLayout();
-		composite.setLayout(layout);
-		layout.numColumns = 3;
-
-		// thrift compiler
-		Label label = new Label(composite, SWT.NONE);
-		GridData grid = new GridData(GridData.BEGINNING);
-		grid.horizontalSpan = 1;
-		label.setLayoutData(grid);
-		label.setText("Thrift compiler : ");
-		final Label compilerLabel = new Label(composite, SWT.NONE);
-		grid = new GridData(GridData.BEGINNING);
-		grid.horizontalSpan = 2;
-		compilerLabel.setLayoutData(grid);
+		ThriftBuildComposite composite = new ThriftBuildComposite(getContainer(), SWT.NONE);
 		IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
-		compilerLabel.setText(prefStore.getString(PreferenceConstants.P_THRIFT));
-		thriftCompiler = compilerLabel;
-
-		// output path
-		label = new Label(composite, SWT.NONE);
-		grid = new GridData(GridData.BEGINNING);
-		label.setLayoutData(grid);
-		label.setText("Output location: ");
-		final Text outputPathText = new Text(composite, SWT.BORDER);
-		grid = new GridData(GridData.BEGINNING);
-		grid.widthHint = 300;
-		outputPathText.setLayoutData(grid);
-		outputPathText.setText(prefStore.getString(PreferenceConstants.P_PATH));
-		Button browse = new Button(composite, SWT.NONE);
-		grid = new GridData(GridData.BEGINNING);
-		browse.setLayoutData(grid);
-		browse.setText("Browse...");
-		browse.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DirectoryDialog dialog = new DirectoryDialog(composite.getShell());
-				dialog.setText("select output location");
-				// dialog.setMessage("Please select the output location");
-				String path = dialog.open();
-				if (path != null && !path.isEmpty()) {
-					outputPathText.setText(path);
-				}
-			}
-		});
-
-		// build
-		Button build = new Button(composite, SWT.NONE);
-		grid = new GridData(GridData.BEGINNING);
-		build.setLayoutData(grid);
-		build.setText("Build...");
-		build.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String thrift = compilerLabel.getText();
-				String outpath = outputPathText.getText();
-				FileEditorInput input = (FileEditorInput) getEditorInput();
-				String file = input.getPath().toString();
-				ThriftCompiler compiler = new ThriftCompiler(thrift);
-				int res = compiler.setSTR("java").setOut(outpath).compile(file);
-				System.out.println("building: " + (res != 0 ? "failed" : "done successfully"));
-			}
-		});
-
+		// set thrift file
+		FileEditorInput input = (FileEditorInput) getEditorInput();
+		composite.setThriftFile(input.getPath().toString());
+		// set default thrift compiler
+		composite.getCompiler().setDefaultPath(prefStore.getString(PreferenceConstants.P_THRIFT));
+		// set default output location
+		IProject proj = input.getFile().getProject();
+		composite.getOutpath().setDefaultPath(proj.getLocation().toString());
+		// add page
 		int index = addPage(composite);
 		setPageText(index, "Build...");
 	}
@@ -208,11 +145,12 @@ public class MultiPageEditor extends MultiPageEditorPart implements IResourceCha
 	 */
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
-		if (newPageIndex == 1) {
-			IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
-			String compiler = prefStore.getString(PreferenceConstants.P_THRIFT);
-			thriftCompiler.setText(compiler);
-		}
+		// if (newPageIndex == 1) {
+		// IPreferenceStore prefStore =
+		// Activator.getDefault().getPreferenceStore();
+		// String compiler = prefStore.getString(PreferenceConstants.P_THRIFT);
+		// thriftCompiler.setText(compiler);
+		// }
 	}
 
 	/**
