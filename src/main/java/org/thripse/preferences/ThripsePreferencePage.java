@@ -38,8 +38,8 @@ public class ThripsePreferencePage
 	public void createFieldEditors() {
 		
 		addField(new FileFieldEditor(PreferenceConstants.P_THRIFT, "&Default Thrift compiler :", getFieldEditorParent()));
-		addField(new DirectoryFieldEditor(PreferenceConstants.P_PATH, 
-				"&Default output location:", getFieldEditorParent()));
+//		addField(new DirectoryFieldEditor(PreferenceConstants.P_PATH, 
+//				"&Default output location:", getFieldEditorParent()));
 		
 		/**
 		addField(
